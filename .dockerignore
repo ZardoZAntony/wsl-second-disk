@@ -1,0 +1,5 @@
+.git
+*.vhdx
+*.img
+*.log
+.idea

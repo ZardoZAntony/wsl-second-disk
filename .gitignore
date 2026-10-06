@@ -1,0 +1,4 @@
+*.vhdx
+*.img
+*.log
+.idea/

@@ -1,0 +1,20 @@
+name: Checks
+on: [push, pull_request]
+jobs:
+  linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build test environment
+        run: docker build -f tests/Dockerfile -t wsl-second-disk-test .
+      - name: Bash syntax and ShellCheck
+        run: docker run --rm wsl-second-disk-test bash -c 'python3 /src/tests/extract_linux.py /tmp/backends && bash -n /tmp/backends/*.sh /src/tests/integration.sh && shellcheck /tmp/backends/*.sh /src/tests/integration.sh'
+      - name: Isolated installation checks
+        run: docker run --rm --privileged wsl-second-disk-test
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: PowerShell syntax and non-destructive checks
+        shell: powershell
+        run: ./tests/windows.ps1
